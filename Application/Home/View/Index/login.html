@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>安财教务登陆接口</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/weui.css">
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/jquery-weui.css">
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/login.css"/>
+    <link rel="stylesheet" href="__PUBLIC__/css/demo.css">
+    <script src="__PUBLIC__/js/jquery-2.1.4.js"></script>
+    <!--<script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>-->
+    <script src="__PUBLIC__/js/jquery-weui.js"></script>
+</head>
+<body id="body">
+<header class="demos-header">
+    <h1 class="demos-title">教务登录</h1>
+</header>
+<div id="container" class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_hd"><label class="weui_label">学号</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="tel" id="studentid" name="studentid" placeholder="请输入学号"/>
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd"><label class="weui_label">密码</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="password" id="password" name="Password" placeholder="请输入密码"/>
+        </div>
+    </div>
+    <div class="weui_cell weui_vcode"  style="display: none">
+        <div class="weui_cell_hd"><label class="weui_label">验证码</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" id="yzm" name="yzm" type="text" value="" placeholder="请输入验证码"/>
+        </div>
+        <div class="weui_cell_ft weui_vimg_wrp">
+            <img src="" id="yzmUrl" onclick="_updateYzm();" alt="点我刷新" style="width:132px;" />
+        </div>
+    </div>
+</div>
+<br>
+<div class="bd spacing">
+    <button name="submit" id="submit" class="weui_btn weui_btn_disabled weui_btn_primary">请先选择学校</button>
+</div>
+<div id="test"></div>
+</body>
+<script>
+    var deleteYzm="{$deleteYzm}";
+    var share="{$share}";
+    var pattern="{$pattern}";
+    var updateYzm="{$updateYzm}";
+    init();
+    $(function(){
+        $("#submit").click(function(){
+            if(basicJudge()){
+                $.showLoading("数据加载中");
+                $.ajax({
+                    url:"{$judge}",
+                    type:"post",
+                    data:{studentid: $("#studentid").val(),password: $("#password").val(), yzm: $("#yzm").val(),schoolIndex:1, pattern: pattern},
+                    dataType:"json",
+                    success: function(data){
+                        $.hideLoading();
+                        if(data.status==1){
+                            location.href="{$redirect_url}";
+                        }
+                        else if(data.status==2){
+                            $.alert("教务密码错误","温馨提示");
+                        }
+                        else if(data.status==3){
+                            if(pattern==1){
+                                $("#yzm").attr("value","");
+                                $(".weui_vcode").css("display","");
+                                _updateYzm();
+                                pattern=2;//将当前pattern设置为2
+                            }
+                            else if(pattern==2){
+                                $.alert("您的验证码填写错误","温馨提示");
+                            }
+                            else{
+                                $.alert("当前页面过期,请重新拉取链接","温馨提示");
+                            }
+                        }
+                        else if(data.status==-1){
+                            $.alert("不存在此用户","温馨提示");
+                        }
+                        else{
+                            $.alert("网络不稳定,建议使用流量~","温馨提示");
+                        }
+                    },
+                    error: function(){
+                        $.hideLoading();
+                        $.alert("网络不稳定,建议使用流量~","温馨提示");
+                    }
+                })
+            }
+        })
+
+        $("#studentid").change(function(){
+            var str=$("#studentid").val();
+            if(str.length>=8){
+                $("#submit").html("登陆教务系统");
+                $("#submit").attr("class","weui_btn weui_btn_primary");
+            }
+        })
+
+
+    })
+
+    function _updateYzm(){
+        $.get(updateYzm,{ school : $("#select").data("values") },function(data){
+            if(data.pattern==-2){
+                $.alert("非法入侵","温馨提示");
+            }
+            else if(data.pattern==-1){
+                $.alert("该校未接入","温馨提示");
+            }
+            else if(data.pattern==2){
+                $("#yzmUrl").attr("src",data.yzm);
+                $("#yzm").attr("value","");
+            }
+            else{
+                $.alert("未知错误,请联系管理员","温馨提示");
+            }
+        });
+    }
+
+    function init(){
+        $.ajax({
+            url:"{$getYzm}",
+            data:{ school : 1 },
+            type:"get",
+            dataType:"json",
+            success: function(data){
+                if(data.pattern==1){
+                    $("#yzm").attr("value",data.yzm);
+                }
+                else if(data.pattern==2){
+                    pattern=2;//将当前pattern设置为2
+                    $("#yzm").val("");
+                    $("#yzmUrl").attr("src",data.yzm);
+                    $(".weui_vcode").css("display","");
+                    setTimeout("_delete()",1000);
+                }
+                $("#submit").html("登陆教务系统");
+                $("#submit").attr("class","weui_btn weui_btn_primary");
+            },
+            error : function(){
+                $("#submit").html("登陆教务系统");
+                $("#submit").attr("class","weui_btn weui_btn_primary");
+            }
+        })
+    }
+
+    function _delete(){
+        $.post(deleteYzm);
+    }
+
+    function basicJudge(){
+        if($("#studentid").val()==""){
+            $("#studentid").focus();
+            $.toast("请输入学号","text");
+            return false;
+        }
+        if($("#password").val()==""){
+            $("#password").focus();
+            $.toast("请输入教务密码","text");
+            return false;
+        }
+        return true;
+    }
+</script>
+<!--<script src="__PUBLIC__/js/share.js?version=4.0.1"></script>-->
+</html>

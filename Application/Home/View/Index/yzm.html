@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ceshi</title>
+    <script src="__PUBLIC__/js/jquery-2.1.1.min.js"></script>
+</head>
+<body>
+
+
+<img src="{$yzmUrl}">
+<input type="text" id="yzm">
+<input type="button" id="submit" value="tijiao">
+
+<script>
+
+    $(function () {
+        $("#submit").click(function () {
+            $.post("{$url}",{ yzm : $("#yzm").val()} , function (data) {
+                console.log(data);
+            })
+        })
+    })
+
+</script>
+</body>
+</html>

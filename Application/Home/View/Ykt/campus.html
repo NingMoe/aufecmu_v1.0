@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>校园卡挂失</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/example.css" >
+    <link rel="stylesheet" href="__PUBLIC__/css/weui.css" >
+    <script src="__PUBLIC__/js/jquery-2.1.4.js"></script>
+    <script src="__PUBLIC__/js/adapter.js"></script>
+    <script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+</head>
+<style>
+    *{
+        overflow-x:hidden;
+        overflow-y:hidden;
+    }
+    #bbbtn
+    {
+        width:95%;
+        margin:0px auto;
+    }
+
+    #rt{
+        width:100%;
+        height:100%
+    }
+</style>
+<body>
+<div id="rt">
+<div class="weui_cells_title" >卡片信息</div>
+<div class="weui_cells">
+    <div class="weui_cell" id="bu2">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>学号</p>
+                </div>
+                <div class="weui_cell_ft"><span id="studentid"></span></div>
+            </div>
+    <div class="weui_cell" >
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>卡号</p>
+                </div>
+                <div class="weui_cell_ft"><span id="cardId"></span></div>
+            </div>
+    <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>卡状态</p>
+                </div>
+                <div class="weui_cell_ft" id="cardstatus"></div>
+            </div>
+    <div class="weui_cell" id="bu">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>主副卡</p>
+                </div>
+                <div class="weui_cell_ft" id="cardinfo"></div>
+            </div>
+</div>
+<br />
+<br />
+<div id="bbbtn">
+<a href="javascript:;" class="weui_btn weui_btn_primary" id="lose">确认挂失</a>
+</div>
+</div>
+
+<div class="weui_dialog_confirm" id="dialogLose" style="display: none;">
+    <div class="weui_mask"></div>
+        <div class="weui_dialog">
+            <div class="weui_dialog_hd"><strong style="font-size: 22px;">温馨提示</strong></div>
+            <div class="dialog_content" style="text-align:center;">
+            	您真的要挂失吗?
+            </div>
+            <div class="weui_dialog_ft">
+                <a href="javascript:;" class="weui_btn_dialog default" id="cancel_quit">取消</a>
+                <a href="javascript:;" class="weui_btn_dialog primary" id="determine_quit">确定</a>
+            </div>
+        </div>
+</div>
+
+<div class="weui_dialog_alert" id="dialogInfo" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">温馨提示</strong></div>
+        <div class="weui_dialog_bd">请稍等，系统正在初始化中！</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript: $('#dialogInfo').hide();" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
+
+<script>
+var share="{$share}";
+$(function(){
+    init();
+	$("#lose").click(function(){
+	    $(".dialog_content").html("您真的要挂失吗?");
+		$("#dialogLose").fadeIn("fast");
+	});
+	
+	$(".weui_mask").click(function(){
+		$("#dialogLose").fadeOut("fast");
+	})
+	
+	$("#cancel_quit").click(function(){
+		$("#dialogLose").fadeOut("fast");
+	})
+	
+	$("#determine_quit").click(function(){
+	    if($("#cardId").html() != "" && $("#studentid").html()!="") {
+            $.ajax({
+                url:yktAPI+"ajaxFunction/fnOption/campus",
+                type:"post",
+                data:{cardId: $("#cardId").html()},
+                dataType: "json",
+                success: function(data){
+                    if(data.status=="1"){
+                        location.href=data.url;
+                    }
+                    else{
+                        alert("挂失失败，请稍后再试！");
+                    }
+                }
+            })
+            $("#dialogLose").fadeOut("fast");
+        }
+	    else {
+            $("#dialogInfo").show();
+        }
+
+	})
+})
+
+    function init() {
+        var studentid=window.localStorage.getItem("studentid");
+        if(studentid == "" || studentid==undefined) {
+            $.get(yktAPI+"personInfo",function (data) {
+                console.log(data);
+                if(data.status==1) {
+                    window.localStorage.setItem("studentid",data.studentid);
+                    window.localStorage.setItem("name",data.name);
+                    $("#studentid").html(data.studentid);
+                }
+                else {
+                    $.alert(data.info,"温馨提示");
+                }
+            })
+        }
+        else{
+            $("#studentid").html(studentid);
+        }
+        $.get(yktAPI+"ajaxFunction/fnOption/campusInit",function (data) {
+            console.log(data);
+            $("#cardId").html(data.campusInfo.cardId);
+            $("#cardstatus").html(data.campusInfo.cardstatus);
+            $("#cardinfo").html(data.campusInfo.cardinfo);
+        })
+    }
+
+</script>
+<!--<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>-->
+</body>
+</html>

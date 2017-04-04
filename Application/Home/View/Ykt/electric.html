@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>寝室购电</title>
+	<link type="text/css" rel="stylesheet" href="__PUBLIC__/css/weui.css" />
+	<link type="text/css" rel="stylesheet" href="__PUBLIC__/css/jquery-weui.css">
+	<link type="text/css" rel="stylesheet" href="__PUBLIC__/css/electric.css" />
+	<link type="text/css" rel="stylesheet" href="__PUBLIC__/css/example.css" />
+	<script src="__PUBLIC__/js/jquery-2.1.4.js"></script>
+	<script src="__PUBLIC__/js/jquery-weui.js"></script>
+	<script src="__PUBLIC__/js/adapter.js"></script>
+	<script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+</head>
+<body style="overflow: hidden;">
+<div class="weui_cells_title " style="margin:17px;margin-left:0px;">选择寝室</div>
+
+<div id="main">
+	<div class="weui_select" id="h1" style="height:30px; width:43%;float:left; display:inline;">
+		<select id="dorm" name="typesup" size="1" class="Select">
+			<option value="0" selected="selected">&nbsp;校区</option>
+			<option value="1">东校南区</option>
+			<option value="2">东校北区</option>
+			<option value="3">西校南区</option>
+			<option value="4">西校北区</option>
+		</select>
+	</div>
+
+	<div  class="weui_select" id="h2" style="height:30px; width:43%; float:left; display:inline;">
+		<select id="building" disabled="disabled" name="typesup" size="1" class="Select">
+			<option value=""selected="selected">&nbsp;寝室楼</option>
+			<option value="东校区">南苑1栋</option>
+			<option value="西校区">南苑2栋</option>
+		</select>
+	</div>
+
+	<div class="weui_select" id="h3" style="height:30px; width:43%;float:left; display:inline; margin-top:15px">
+
+		<select id="floor" disabled="disabled" name="typesup" size="1" class="Select">
+			<option value="" selected="selected">&nbsp;楼层</option>
+			<option value="东校区">1楼</option>
+			<option value="西校区">2楼</option>
+			<option value="东校区">3楼</option>
+			<option value="西校区">4楼</option>
+			<option value="东校区">5楼</option>
+			<option value="西校区">6楼</option>
+		</select>
+	</div>
+
+	<div class="weui_select"  id="h4" style="height:30px; width:43%;float:left; display:inline; margin-top:15px;">
+		<select id="room" disabled="disabled" name="typesup" size="1" class="Select">
+			<option value=""selected="selected">&nbsp;房间</option>
+			<option value="101">101</option>
+			<option value="102">102</option>
+			<option value="103">103</option>
+			<option value="104">104</option>
+		</select>
+	</div>
+</div>
+<br /><br /><br />
+<div id="main2" >
+	<div class="weui_cells_title" style="margin:17px;margin-left:0px;">缴费方式</div>
+	<div class="weui_cells weui_cells_radio" id="electricMoney">
+        <label class="weui_cell weui_check_label" id="campusBuy">
+            <div class="weui_cell_ft">
+                <input type="radio" class="weui_check" checked="checked">
+                <span class="weui_icon_checked" id="x1"></span>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>校园卡</p>
+                <p id="campus">---元</p>
+            </div>
+        </label>
+        <label class="weui_cell weui_check_label" id="bankBuy">
+            <div class="weui_cell_ft">
+                <input type="radio"  class="weui_check" checked="checked">
+                <span class="weui_icon_checked" style="display: none;" id="x2"></span>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>银行卡</p>
+                <p id="bank">---元</p>
+            </div>
+        </label>
+	</div>
+</div>
+<div class="weui_cells_title" >缴费金额</div>
+<div class="flexbox flex-row">
+	<div class="flexbox-item"  style="margin-left: 8px;">
+		<div class="radio-uncheck" id="radio1" onclick="sel1()">10元</div>
+	</div>
+	<div class="flexbox-item" style="margin-left: 8px;">
+		<div class="radio-checked" id="radio2" onclick="sel2()">30元</div>
+	</div>
+	<div class="flexbox-item" style="margin-left: 8px;">
+		<div class="radio-uncheck" id="radio3" onclick="sel3()">50元</div>
+	</div>
+	<div class="flexbox-item" style="margin-left: 8px;">
+		<input type="number" id="moneyInput" class="flex-demo-input" placeholder="其他金额" onfocus="sel4()" onblur="g()" maxlength="3" pattern="[0-9]*">
+	</div>
+</div>
+    <input type="hidden" name="roomId" id="roomId">
+    <input type="hidden" name="choosePayType" id="choosePayType" value="1">
+    <input type="hidden" name="money" id="money" value="30">
+    <input id="bankMoney" type="hidden" value="" data-status="5">
+    <input id="campusMoney" type="hidden" value="">
+<div class="weui_btn_area">
+	<a class="weui_btn weui_btn_primary" href="javascript:" id="bugElectric" data-elec="1"> 确认购电</a>
+</div>
+
+</body>
+<script>
+	var judge=false;
+    var buyElectric="{$buyElectric}";
+    var elecUrl="{$elecUrl}";
+    var getMoneyBalance="{$getMoneyBalance}";
+    var share="{$share}";
+</script>
+<script src="__PUBLIC__/js/electric.js"></script>
+<!--<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>-->
+</html>

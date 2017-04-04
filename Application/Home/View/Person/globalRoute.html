@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>正在登陆...</title>
+</head>
+<body>
+<script type="text/javascript" src="__PUBLIC__/_js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/_js/js.cookie.js"></script>
+
+<script>
+    if("{$m_access_token}" == "successful") {
+        Cookies.set("m_access_token","{$m_access_token}");
+        Cookies.set("headimgurl","{$headimgurl}");
+        Cookies.set("cname","{$cname}");
+        window.location.href=Cookies.get("m_target");
+    }
+    else {
+        window.location.href="{$errPageUrl}";
+    }
+</script>
+
+</body>
+</html>

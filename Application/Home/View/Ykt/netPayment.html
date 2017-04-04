@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>城市热点缴费</title>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/weui.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/jquery-weui.css">
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/netpay.css">
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/example.css">
+    <script src="__PUBLIC__/js/jquery-2.1.1.min.js"></script>
+    <script src="__PUBLIC__/js/jquery-weui.js"></script>
+    <script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?02e6370a8bad8125a3744d0b572a1b69";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<style>
+
+</style>
+<body>
+
+<div class="weui_cells_title">账户余额</div> 
+
+         <div class="weui_cells">
+            <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span >网络热点余额</span>
+                </div>
+                <div class="weui_cell_ft" id="netBalance">----元</div>
+            </div>
+        </div>
+        <div class="weui_cells_title">缴费方式</div>        
+<div class="weui_cells weui_cells_radio" id="netMoney">
+        <label class="weui_cell weui_check_label" for="x11" onclick="net1()">
+            <div class="weui_cell_ft">
+                <input type="radio" class="weui_check" id="x11" checked="checked">
+                <span class="weui_icon_checked" id="x1"></span>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>校园卡</p>
+                <p id="campus">----元</p>
+            </div>
+        </label>
+        <label class="weui_cell weui_check_label" for="x12" onclick="net2()">
+            <div class="weui_cell_ft">
+                <input type="radio" class="weui_check" id="x12" checked="checked">
+                <span class="weui_icon_checked" style="display: none;" id="x2"></span>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>银行卡</p>
+                <p id="bank">----元</p>
+            </div>
+        </label>
+    </div>
+      </div>
+    <div class="weui_cells_title">缴费金额</div>
+    <div class="flexbox flex-row">
+        <div class="flexbox-item"  style="margin-left: 8px;">
+            <div class="radio-checked" id="radio1" onclick="sel1()">5元</div>
+        </div>
+        <div class="flexbox-item" style="margin-left: 8px;">
+            <div class="radio-uncheck" id="radio2" onclick="sel2()">10元</div>
+        </div>
+        <div class="flexbox-item" style="margin-left: 8px;">
+            <div class="radio-uncheck" id="radio3" onclick="sel3()">20元</div>
+        </div>
+        <div class="flexbox-item" style="margin-left: 8px;">
+            <input class="flex-demo-input" placeholder="其他金额" id="inputText" onfocus="sel4()" onblur="g()" pattern="[0-9]*" onkeyup="value=this.value.replace(/\D+/g,'')">
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <a class="weui_btn weui_btn_disabled weui_btn_primary" href="javascript:" id="ok" data-net="0">系统初始化中...</a>
+    </div>
+<input type="hidden" id="choosePayType" value="1">
+<input type="hidden" id="money" value="5">
+<input id="bankMoney" type="hidden" value="" data-status="5">
+<input id="campusMoney" type="hidden" value="">
+<script>
+    var getMoneyBalance="{$getMoneyBalance}";
+    var getNetBalance="{$getNetBalance}";
+    var payment="{$payment}";
+    var netAccouont="{$netAccouont}";
+    var share="{$share}";
+</script>
+<script src="__PUBLIC__/js/netpay.js"></script>
+<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="wid;/th=device-width,initial-scale=1,user-scalable=no">
+<title>自助圈存</title>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/weui.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/jquery-weui.css">
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/save.css">
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/example.css">
+    <script src="__PUBLIC__/js/jquery-2.1.1.min.js"></script>
+    <script src="__PUBLIC__/js/jquery-weui.js"></script>
+    <script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?02e6370a8bad8125a3744d0b572a1b69";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<style type="text/css">
+</style>
+    </head>
+    <body style="overflow: hidden;">
+    <div class="weui_cells_title">账户余额</div>
+        <div class="weui_cells" id="stu" data-save="1">
+            <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>校园卡</p>
+                </div>
+                <div class="weui_cell_ft" id="campus">----元</div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>银行卡</p>
+                </div>
+                <div class="weui_cell_ft" id="bank">----元</div>
+            </div>
+        </div>
+    <div class="weui_cells_title">圈存金额</div>
+    <div class="flexbox flex-row">
+        <div class="flexbox-item"  style="margin-left: 8px;">
+            <div class="radio-uncheck" id="radio1" onclick="sel1()">30元</div>
+        </div>
+        <div class="flexbox-item" style="margin-left: 8px;">
+            <div class="radio-uncheck" id="radio2" onclick="sel2()">50元</div>
+        </div>
+        <div class="flexbox-item" style="margin-left: 8px;">
+            <div class="radio-checked" id="radio3" onclick="sel3()">100元</div>
+        </div>
+        <div class="flexbox-item" style="margin-left: 8px;">
+            <input type="number" class="flex-demo-input" placeholder="其他金额" onfocus="sel4()" onblur="g()" id="text" maxlength="3" pattern="[0-9]*" onkeyup="value=this.value.replace(/\D+/g,'')">
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <a class="weui_btn weui_btn_disabled weui_btn_primary" href="javascript:" id="save" data-save="0">系统初始化中...</a>
+    </div>
+    <input id="saveMoney" type="hidden" value="100">
+    <input id="bankMoney" type="hidden" value="">
+    </body>
+
+<script>
+var share="{$share}";
+function initBalance(){
+    $.ajax({
+        url:"{$getMoneyBalance}",
+        type:"get",
+        dataType:"JSON",
+        success:function(data){
+            if(data.status==1){
+                $("#bank").html(data.bank+"元");
+                $("#campus").html(data.campus+"元");
+                $("#bankMoney").val(data.bank);
+                $("#save").data("save","1");
+                $("#save").attr("class","weui_btn weui_btn_primary");
+                $("#save").html("确认圈存");
+            }
+            else if(data.status==2){
+                $("#save").html("圈存时间为每日8:00～22:00");
+                $("#save").data("save","0");
+                $("#campus").html(data.campus+"元");
+                $("#bank").html("非服务时间");
+                $("#bankMoney").val("非服务时间");
+            }
+            else{
+                $("#save").html("银行服务暂不可用");
+                $("#save").data("save","0");
+                $("#campus").html(data.campus+"元");
+                $("#bank").html("银行服务暂不可用");
+            }
+        }
+    })
+}
+
+$(function(){
+    initBalance();
+    $("#save").click(function(){
+        if($("#text").val()==""){
+            money=parseInt($("#saveMoney").val());
+        }
+        else{
+            money=parseInt($("#text").val());
+        }
+        if($("#save").data("save")==1){
+            if(money>300){
+                $.alert("圈存金额超过上限300元","温馨提示");
+            }
+            else if(money<0){
+                $.alert("金额输入错误","温馨提示");
+            }
+            else {
+                var bank = $("#bankMoney").val()*1;
+                console.log("充值："+money);
+                console.log("银行："+bank);
+                if(money < bank){
+                    $.showLoading("全力加载中...");
+                    $.ajax({
+                        url:"{$ajaxSave}",
+                        type:"post",
+                        data: {money :money},
+                        dataType: "json",
+                        success: function(data){
+                            $.hideLoading();
+                            if(data.status==1){
+                                location.href=data.url;
+                            }
+                            else{
+                                $.alert(data.info,"温馨提示");
+                            }
+                        },
+                        error: function(){
+                            $.hideLoading();
+                        }
+                    })
+                }
+                else{
+                    $.alert("您输入的金额超过您的银行卡余额,请从新输入","温馨提示");
+                }
+            }       
+        }
+    })
+})
+
+        function sel1() {
+            document.getElementById('radio1').setAttribute("class","radio-checked");
+            document.getElementById('radio2').setAttribute("class","radio-uncheck");
+            document.getElementById('radio3').setAttribute("class","radio-uncheck");
+            $("#saveMoney").val("30");
+        }
+        function sel2() {
+            document.getElementById('radio1').setAttribute("class","radio-uncheck");
+            document.getElementById('radio2').setAttribute("class","radio-checked");
+            document.getElementById('radio3').setAttribute("class","radio-uncheck");
+            $("#saveMoney").val("50");
+        }
+        function sel3() {
+            document.getElementById('radio1').setAttribute("class","radio-uncheck");
+            document.getElementById('radio2').setAttribute("class","radio-uncheck");
+            document.getElementById('radio3').setAttribute("class","radio-checked");
+            $("#saveMoney").val("100");
+        }
+        function sel4() {
+            document.getElementById('radio1').setAttribute("class","radio-uncheck");
+            document.getElementById('radio2').setAttribute("class","radio-uncheck");
+            document.getElementById('radio3').setAttribute("class","radio-uncheck");
+            document.getElementById('text').setAttribute("placeholder","")
+        }
+        function g() {
+            document.getElementById('text').setAttribute("placeholder","其他金额")            
+        }
+
+</script>
+<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>
+</html>

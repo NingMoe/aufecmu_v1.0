@@ -1,0 +1,70 @@
+        html,body{
+            font-size: 62.5%;
+            overflow: hidden;
+        }
+        #main{
+            padding-left: 4%;
+            margin: 6% auto 10% auto;
+        }
+        #tablest{
+            margin: 0 auto;
+            border-collapse: separate;
+            border-spacing:20px 10px;
+            table-layout: fixed;
+            width: 100%;
+        } 
+        #alertst{
+            text-align:left;
+            font-family: '微软雅黑';
+            font-size: 1.5rem;
+        }
+        button{
+            width: 7.5rem;
+            height: 4.7rem;
+            font-size: 1.5rem;
+            color:#a9a9a9;
+            border:1px solid black;
+            border-radius: 3px;
+            background: #FFF;
+            outline: none;
+        }
+        .hide{
+            display: none;
+        }
+        .bind {
+            color: #35b36a;
+            border-color: #35b36a;
+        }
+        #txt{
+            width: 7.5rem;
+            height: 4.7rem;
+            font-size: 1.5rem;
+            border:1px solid black;
+            border-radius: 3px;
+            background: #FFF;
+            outline: none;
+            text-align:center;
+            -webkit-appearance: none;
+        }
+        #alertnd{
+            text-align:left;
+            font-family: '微软雅黑';
+            font-size: 1.5rem;
+            color: red;
+            word-break: break-all;
+            }
+        .weui-btn_plain-primary{
+            width: 16rem;
+        }
+        .footer{
+            margin-top:50%;
+        }
+        #tablend{
+            margin: 0 auto;
+            font-size:1.5rem;
+            font-family: '微软雅黑';
+            color:#266db1;
+            border-collapse: separate;
+            border-spacing: 30px 20px;
+        }
+    

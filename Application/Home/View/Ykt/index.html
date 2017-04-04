@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>一卡通服务</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/weui.css">
+    <!--<link rel="stylesheet" href="__PUBLIC__/css/example-0.4.css">-->
+    <link rel="stylesheet" href="__PUBLIC__/_css/index.css">
+    <script src="__PUBLIC__/js/adapter.js"></script>
+    <script src="__PUBLIC__/js/jquery-2.1.4.js"></script>
+</head>
+<body ontouchstart="">
+    <div id="container">
+        <div id="main">
+            <table id="tablest">
+                <tr>
+                    <td id="alertst" colspan="3">当前余额：0.56元</td>
+                </tr>
+                <tr>
+                    <td><button id="btn1" class="btn bind" data-money="50">50元</button></td>
+                    <td><button id="btn2" class="btn" data-money="100">100元</button></td>
+                    <td><input type="text" id="txt" name="xxzx" value="" placeholder="其他金额" /></td>
+                </tr>
+                <tr>
+                    <td id="alertnd" colspan="3" class="hide">状态及错误提示...</td>
+                </tr>
+            </table>
+        </div>
+        <a href="javascript:;" style="width: 40%;" class="weui_btn weui_btn_plain_primary" id="save" data-save="1">立即圈存</a>
+        <div class="footer">
+            <table id="tablend">
+                <tr>
+                    <td onclick="javascript: window.location.href=yktAPI+'electric';">寝室购电</td>
+                    <td onclick="javascript: window.location.href=yktAPI+'netPay';">热点缴费</td>
+                    <td onclick="javascript: window.location.href=yktAPI+'campus';">卡片挂失</td>
+                </tr>
+                <tr>
+                    <td onclick="javascript: window.location.href=yktAPI+'password';">密码修改</td>
+                </tr>
+            </table>
+        </div>
+        <div id="loadingToast" class="weui_loading_toast" style="display: none;">
+            <div class="weui_mask_transparent"></div>
+            <div class="weui_toast" style="width: 15em;margin-left: -7.4em;">
+                <div class="weui_loading">
+                    <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+                    <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+                </div>
+                <p class="weui_toast_content">数据加载中</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var money=50;
+
+    $(function () {
+        init();
+
+        $("#save").click(function () {
+            if($(this).data("save") == "1") {
+                $("#loadingToast").show();
+                money=$("#txt").val()=="" ? money : $("#txt").val();
+                var uri=yktAPI+"ajaxFunction",data={money : money,fnOption : "save"},fn_success=function (data) {
+                    if(data.status=="1") {
+                        $("#loadingToast").hide();
+                        $("#alertnd").removeClass("hide");
+                        $("#alertnd").html("您刚刚成功圈存"+data.money+"元");
+                    }
+                    else {
+                        $("#loadingToast").hide();
+                        $("#alertnd").removeClass("hide");
+                        $("#alertnd").html((data.info == undefined || data.info=="" || data.info==null) ? "内部错误" : data.info);
+                    }
+                },fn_error=function () {
+                    $("#alertnd").html("内部错误，请联系管理员处理；");
+                },type="post";
+                Public.loadAjaxData(uri,data,fn_success,fn_error,type);
+            }
+            else {
+                $("#alertnd").append("（完成后才能圈存哦~）");
+            }
+        })
+
+        $(".btn").click(function () {
+            $(".btn").attr("class","btn");
+            $(this).addClass("bind");
+            $("#txt").val("");
+            money=$(this).data("money");
+        })
+
+        $("#txt").click(function () {
+            $(".btn").attr("class","btn");
+        })
+
+    })
+
+    function init() {
+        var campusMoney=window.localStorage.getItem("campusMoney");
+        $("#alertst").html("上次查询："+((campusMoney == "" || campusMoney==null) ? "xxx" : campusMoney )+"元");
+        var url=yktAPI+"getCampusMoney",fn_success=function (data) {
+            console.log(data);
+            if(data.status=="1") {
+                window.localStorage.setItem('campusMoney',data.campus);
+                window.localStorage.setItem('storeTime',Date.parse(new Date()) / 1000);
+                $.post(yktAPI+"moneyTogether",{campusMoney : data.campus});
+                $("#alertst").html("当前余额："+data.campus+"元");
+            }
+            else if(data.status=="5") {
+                //cookie超时，重新登录
+                Public.isWeiXin() ? Public.wxLogin("save") : alert("请使用微信端登录哦！");
+            }
+            else {
+                $("#save").data("save","-1");
+                $("#statusText").removeClass("hide");
+//                alert(data.info);
+                $("#alertnd").html((data.info == undefined || data.info=="" || data.info==null) ? "内部错误" : data.info);
+            }
+        },fn_error=function () {
+            alert("内部错误，请联系管理员！");
+        };
+        Public.loadAjaxData(url,{},fn_success,fn_error);
+    }
+
+    //用于系统做账，前端部分
+    function record() {
+
+    }
+
+</script>
+</html>

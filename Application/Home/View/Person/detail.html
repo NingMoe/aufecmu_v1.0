@@ -1,0 +1,197 @@
+<html style="font-size: 17px;"><head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="__PUBLIC__/_css/join_group.css">
+    <link rel="stylesheet" href="__PUBLIC__/_css/main.css">
+    <link rel="stylesheet" href="__PUBLIC__/_css/dropload.css">
+    <title>{$commentInfo.content}</title>
+
+<body style="background: rgb(229, 229, 229);">
+<div class="topic">
+	<div class="join-banner" style="display: block;">
+        <div class="banner-left fl">
+            <!--<p class="topic-himg fl">-->
+            <!--</p>-->
+            <div class="fl banner-p" onclick="topicDetail.groupHref()">
+                <p class="banner-f-13 banner-enter">
+                    <!-- <img src="../../images/group_arrow.png?v=f76cb59"> -->
+                    <span>进入</span>
+                </p>
+                <p><span id="banner-group-name">校友圈</span><span class="vertical-line"></span></p>
+            </div>
+            <p></p>
+        </div>
+        <!-- <a class="fr create_a"><span>发表</span></a> -->
+        <div class="fr">
+            <a class="banner-button hide b-r-4 js_up_click" onclick="Public.goEdit()">
+                <!-- <img src="../../images/topic01.png?v=ca15a18"> -->
+                <span>发表</span>
+            </a>
+        </div>
+    </div>
+    <br>
+    <div class="topic-main">
+        <div id="topic_main">
+            <div class="topic-ti detail-fixmt">
+                <p class="fl top-m-img">
+                    <img src="{$commentInfo.headimgurl}">
+                </p>
+                <div class="topic-p">
+                    <p class="f-3-16">{$commentInfo.cname}</p>
+                    <p class="f-g-11 pt4">{$commentInfo.time}</p>
+                </div>
+            </div>
+            <div class="f-3-16 topic-mid-div js-topictxt" data-type="allow">
+                <span class="main-content">{$commentInfo.content}</span>
+                <span class="topic_more">...</span>
+            </div>
+            <volist name="imgInfo" id="it">
+            	<div class="topic-m-img">
+                    <img src="{$it}" onclick="topicDetail.previewImg(event)">
+                </div>
+            </volist>
+            <div class="top-m-header">
+                <em class="topic-em"></em>
+                <span class="topic-add-hr"></span>
+                <div class="topic-avatar">
+                    <div class="topic-like b-r-4 fl like_false" data-isLiked="-1">
+                        <span>{$commentInfo.zan}</span>
+                    </div>
+                    <ul class="fl">
+                    </ul>
+                </div>
+                <div class="topic_reply">
+                    <p class="reply-count"><span class="js_reply_count">{$commentInfo.comcount}</span> 条评论</p>
+                    <div class="reply-div" data-type="parentComment" data-backuser="{$commentInfo.backuser}" data-noteid="{$commentInfo.noteid}" data-notename="{$commentInfo.cname}">
+                        <div class="comm_wrap b-r-2">
+                            <textarea placeholder="我也来评论一句" ></textarea>
+                        </div>
+                        <div class="reply-buttons hide">
+                            <a class="reply-cancel b-r-4 js-reply-c">取消</a>
+                            <a class="reply-submit b-r-4 js-reply-s">评论</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="reply-list">
+                    <ul id="reply-list-ul">
+                        <!-- <li style="border-top:none">
+                            <div class="clear reply-show">
+                            <span class="b-r-50 reply-tx fl">
+                                <img src="https://file.xiaomiquan.com/user_avatar/14602550857991868.jpg "></span>
+                                <div class="reply-txt fl">
+                                    <p class="name ">
+                                        Kay</p>
+                                    <p class="txt">没有吧</p>
+                                </div>
+                            </div>
+                            <div class="reply-area">
+                                <span class="time">昨天 21:18</span>
+                                <span class="span-rep time js-reply-btns">回复</span>
+                            </div>
+                            <div class="reply-div comm-div hide" data-type="childComment" data-backuser="" data-noteid="" data-notename="">
+                                <div class="comm_wrap b-r-2">
+                                    <span class="input_value" data-id="552152242244">@</span>
+                                    <textarea class="b-r-2 expand" readonly="true" placeholder="回复Kay:"></textarea>
+                                </div>
+                                <div class="reply-buttons"><a class="reply-cancel b-r-4 js-reply-c" data-type="rep_type">取消</a><a class="reply-submit b-r-4 js-reply-s">评论</a></div>
+                            </div>
+                            <div class="re-com-div">
+                                <div>
+                                    <div class="child-com-hr"></div>
+                                    <div class="clear reply-show">
+                                        <div class="reply-com-txt fl">
+                                            <span class="name ">王博</span>
+                                            <span style="color:#aeaeae">回复</span>
+                                            <span class="name ">唯识•玉菩提</span>
+                                            <span>: </span>
+                                            <span class="txt">嗯</span>
+                                        </div>
+                                    </div>
+                                    <div class="reply-area">
+                                        <span class="time">1 小时前</span>
+                                        <span class="span-rep time js-reply-btns">回复</span>
+                                    </div>
+                                    <div class="reply-div comm-div hide" data-type="childComment" data-backuser="" data-noteid=""  data-notename="">
+                                        <div class="comm_wrap b-r-2">
+                                            <span class="input_value" data-id="225842245441">@</span>
+                                            <textarea class="b-r-2 expand" readonly="true" placeholder="回复王博:"></textarea>
+                                        </div>
+                                        <div class="reply-buttons"><a class="reply-cancel b-r-4 js-reply-c" data-type="rep_type">取消</a><a class="reply-submit b-r-4 js-reply-s">评论</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li> -->
+                    </ul>
+                    <div class="dropload-down" style="display: none;"></div></div>
+            </div></div>
+    </div>
+    <div class="main_loading" style="display: none;"><span>努力加载中</span></div>
+</div>
+</div>
+<script type="text/javascript" src="__PUBLIC__/_js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/_js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="__PUBLIC__/_js/dropload.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/_js/audio.js"></script>
+<script type="text/javascript" src="__PUBLIC__/_js/js.cookie.js"></script>
+<script type="text/javascript" src="__PUBLIC__/_js/public.js?ra=623232213"></script>
+<script type="text/javascript" src="__PUBLIC__/_js/topicdetail.js?ra=91"></script>
+<script type="text/html" id="commentTmpl">
+    <li style="border-top:none">
+        <!-- 一级评论 -->
+        <div class="clear reply-show">
+            <span class="b-r-50 reply-tx fl">
+                <img src=""/></span>
+            <img src="{0}图片url"/></span>
+            <div class="reply-txt fl">
+                <p class="name">{1}cname</p>
+                <p class="txt">{2}comment</p>
+            </div>
+        </div>
+        <div class="reply-area">
+            <span class="time">{3}</span>
+            <span class="span-rep time js-reply-btns">回复</span>
+        </div>
+        <div class="reply-div comm-div hide" data-type="childComment" data-backuser="{4}" data-noteid="{5}" data-notename="{6}" data-comid="{7}">
+            <div class="comm_wrap b-r-2">
+                <span class="input_value">@</span>
+                <textarea class="b-r-2 expand" readOnly=true placeholder="回复{1}:"></textarea>
+            </div>
+            <div class="reply-buttons">
+                <a class="reply-cancel b-r-4 js-reply-c" data-type="rep_type">取消</a>
+                <a class="reply-submit b-r-4 js-reply-s">评论</a>
+            </div>
+        </div>
+
+        <!-- 二级评论 -->
+        <div class="re-com-div">
+            <div>
+                <div class="child-com-hr"></div>
+                <div class="clear reply-show">
+                    <div class="reply-com-txt fl">
+                        <span class="name group-owner-light">{0}</span><span style="color:#aeaeae">回复</span>
+                        <span class="name group-owner-light">{1}</span><span>: </span>
+                        <span class="txt">{2}</span>
+                    </div>
+                </div>
+                <div class="reply-area">
+                    <span class="time">{3}</span><span class="span-rep time js-reply-btns">回复</span>
+                </div>
+                <div class="reply-div comm-div hide" data-type="childComment" data-backuser="{4}" data-noteid="{5}" data-notename="{6}" data-comid="{7}">
+                <div class="comm_wrap b-r-2">
+                    <span class="input_value">@</span>
+                    <textarea class="b-r-2 expand" readOnly=true placeholder="回复{0}:"></textarea>
+                </div>
+                    <div class="reply-buttons"><a class="reply-cancel b-r-4 js-reply-c" data-type="rep_type">取消</a>
+                        <a class="reply-submit b-r-4 js-reply-s">评论</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</script>
+
+</body>
+</html>

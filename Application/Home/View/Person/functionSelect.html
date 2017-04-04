@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/weui.css" >
+    <link rel="stylesheet" href="__PUBLIC__/css/example.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/functionSelect.css">
+    <script src="__PUBLIC__/js/jquery-2.1.1.min.js"></script>
+    <script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?02e6370a8bad8125a3744d0b572a1b69";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<body ontouchstart>
+<div class="body" id="body">
+    <div class="heading">
+        <div class="heading_info">
+            <div class="heading_info_content">
+                <div class="heading_info_content_img">
+                    <img src="{$headimgurl}" class="img-rounded">
+                </div>
+                <div class="heading_info_content_info"  style="margin-left: 40%; ">
+                    <p>姓名:<span>{$name}</span></p>
+                    <p>学号:<span type="number">{$studentid}</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="heading_tran" style="color:#7F7F7F">
+            一卡通服务
+        </div>
+    </div>
+    <div class="bd">
+        <div class="weui_grids">
+            <a href="{$save}" class="weui_grid js_grid" data-id="button">
+                <div class="weui_grid_icon">
+                    <img src="__PUBLIC__/img/save.png?rand=2" alt="">
+                </div>
+                <p class="weui_grid_label">
+                   饭卡圈存
+                </p>
+            </a>
+
+            <a href="{$electric}" class="weui_grid js_grid" data-id="cell">
+                <div class="weui_grid_icon">
+                    <img src="__PUBLIC__/img/electric.png?rand=2" alt="">
+                </div>
+                <p class="weui_grid_label">
+                   寝室购电
+                </p>
+            </a>
+
+            <a href="{$netPay}" class="weui_grid js_grid" data-id="toast">
+                <div class="weui_grid_icon">
+                    <img src="__PUBLIC__/img/netpay.png?rand=2" alt="">
+                </div>
+                <p class="weui_grid_label">
+                    热点缴费
+                </p>
+            </a>
+            <a href="{$password}" class="weui_grid js_grid" data-id="progress">
+                <div class="weui_grid_icon">
+                    <img src="__PUBLIC__/img/password.png?rand=2" alt="">
+                </div>
+                <p class="weui_grid_label">
+                    密码修改
+                </p>
+            </a>
+            <a href="{$campus}" class="weui_grid js_grid" data-id="button">
+                <div class="weui_grid_icon">
+                    <img src="__PUBLIC__/img/loss.png?rand=2" alt="">
+                </div>
+                <p class="weui_grid_label">
+                    一卡通挂失
+                </p>
+            </a>
+            <a href="https://jinshuju.net/f/OIGp7T" class="weui_grid js_grid" data-id="button">
+                <div class="weui_grid_icon">
+                    <img src="__PUBLIC__/img/cet.png?rand=2" alt="">
+                </div>
+                <p class="weui_grid_label">
+                    使用反馈
+                </p>
+            </a>
+        </div>
+    </div>    
+</div>
+<div class="buttom" style="position:relative;">
+    <div class="buttom_form" >
+        <button class="weui_btn weui_btn_warn" id="logout">退出登录</button>
+  </div>
+    <div class="buttom_state" id="state" style="margin-top:14px;">
+        <p>&copy;SA团队</p>
+  </div>
+</div>
+<div class="weui_dialog_confirm" id="dialog_quit" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">退出提示</strong></div>
+        <div class="weui_dialog_bd" style="text-align: center;">您真的要退出吗?</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default" id="cancel_quit">取消</a>
+            <a href="javascript:;" class="weui_btn_dialog primary" id="determine_quit">确定</a>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+var share="{$share}";
+    $(function(){
+        var bodyHeight = $(".body").height();
+        var divHeight = $(".buttom").height() + 1;
+        var screenHeight = $(window).height();
+        $(".buttom").css("top",screenHeight - bodyHeight - divHeight);  
+
+    $("#logout").click(function(){
+        $("#dialog_quit").css("display","");
+    });
+
+    $("#determine_quit").click(function(){
+            $.get("{$Logout}",function(data){
+                if(data.status==1){
+                    wx.closeWindow();
+                }
+            })
+        })
+    
+    $(".weui_mask").click(function(){
+        $("#dialog_quit").css("display","none");
+    })
+    
+    $("#cancel_quit").click(function(){
+        $("#dialog_quit").css("display","none");
+    })
+    })
+</script>
+<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>
+</html>

@@ -1,0 +1,134 @@
+*{
+    margin: 0px 0px;
+    overflow-x:visible;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+.body{
+    position: relative;
+
+    z-index: 0;
+}
+
+
+.heading{
+    margin: 0px 0px;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.heading_title{
+    position: relative;
+    background-color: #000000;
+    width: 100%;
+    height: 10%;
+}
+
+.heading_title p{
+    color: #FDFDFD;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.img-rounded{
+    width: 65px;
+    height: 65px;
+    position: relative;
+    z-index: 2;
+    margin-top: 10px;
+    margin-left: 20px;
+    border: 1px solid #7B7B7B;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius:10px;
+}
+
+.heading_info{
+    background-color: #686F79;
+    height: 85px;
+}
+
+.heading_info_content_info{
+    position: relative;
+    z-index: 2;
+    top: -65px;
+}
+
+.heading_info_content_info p{
+    color: #FDFDFD;
+}
+
+.heading_tran{
+    background-color: #F0F0F2;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 10px;
+}
+
+.buttom{
+    margin-top: 10%;
+}
+
+.buttom_p{
+    margin-top: 5px;
+    font-size: 10px;
+    text-align: center;
+    color: #7B7B7B;
+}
+
+.buttom_form{
+    margin-left: 8%;
+    margin-right: 8%;
+    margin-top: 10%;
+}
+
+.buttom_state{
+    margin-top: 20px;
+    position: relative;
+    top: 8px;
+    font-size: 12px;
+    text-align: center;
+    color: #61749B;
+}
+
+
+.bd{
+    position: relative;
+}
+
+.weui_grid_label{
+    position: relative;
+    top: 10px;
+}
+
+.dialog_content{
+    width: auto;
+    position: relative;
+}
+
+.dialog_content_input{
+    display: inline;
+    height: 50px;
+}
+
+.dialog_content_input input{
+    width: 120px;
+    height: 30px;
+    padding-left: 5px;
+    border: none;
+    box-shadow: none;
+    font-size: 16px;
+}
+
+.dialog_content_img{
+    display: inline;
+}
+
+.dialog_content_img img{
+    position: relative;
+    height: 30px;
+    top: 11px;
+    border-bottom:1px solid #D9D9D9;
+    right: 5px;
+}

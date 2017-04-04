@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1 ,user-scalable=0">
+        <title>安全验证</title>
+        <link rel="stylesheet" href="__PUBLIC__/css/weui.css" >
+		<link rel="stylesheet" href="__PUBLIC__/css/example.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/safe.css">
+		<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/yzm.css?version=1.0.2">
+		<link type="text/css" rel="stylesheet" href="__PUBLIC__/css/jquery-weui.css">
+		<script src="__PUBLIC__/js/jquery-2.1.4.js"></script>
+		<script src="__PUBLIC__/js/jquery-weui.js"></script>
+		<script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+	</head>
+    <body style="overflow: hidden;" onload="inputWidth()">
+	    <div class="head">
+		    <img src="{$headimgurl}" class="portrait">
+		    <br>
+		    <a href="javascript:return false;" class="id">{$studentid}({$name})</a>
+	    </div>
+		<div class="login">
+			<label for="#1">密码</label>
+			<input type="password" name="password" id="password" placeholder="请输入6位密码" maxlength="6" pattern="[0-9]*" onkeyup="value=this.value.replace(/\D+/g,'')">
+			<img src="__PUBLIC__/images/uncheck.svg" onclick="show()">
+			<input type="hidden" id="studentid" value="{$studentid}">
+			<input type="hidden" id="yzmlogin" value="-1">
+			<div class="border"></div>
+		</div>
+	    <div class="weui_btn_area">
+	        <a class="weui_btn weui_btn_primary" href="javascript:" id="login" data-yzm="1">确认登录</a>
+	    </div>
+        <script>
+			var updateYzm="{$updateYzm}";
+			var deleteYzm="{$deleteYzm}";
+			var getYzm="{$getYzm}";
+			var check="{$judge}";
+        	var pub="__PUBLIC__";
+            window.localStorage.setItem("studentid","{$studentid}");
+            window.localStorage.setItem("name","{$name}");
+        	var share="{$share}";
+        	var count=0;
+
+        	$(function(){
+				init();
+				$("#login").click(function(){
+					if($("#password").val()==""){
+						$.alert("请输入一卡通密码！","温馨提示");
+						return ;
+					}
+					if($("#login").data("yzm") == "-1") {
+						$.get(updateYzm,function(data){
+							showYzm(data.yzm);
+						})
+						return ;
+					}
+					var yzm=$("#yzmlogin").val();
+					console.log(yzm.length);
+					if(yzm.length==4){
+						ajaxCheck(yzm);
+					}
+					else{
+						ajaxCheck(-1);
+					}
+				});
+			})
+
+			function init(){
+				$.get(getYzm,function(data){
+					if(data.pattern==1){
+						$("#yzmlogin").val(data.yzm);
+					}
+					else {
+						//当pattern为2时，设置当前需要使用手动输入验证码登陆
+						$("#login").data("yzm",-1);
+					}
+				})
+			}
+
+        	function inputWidth() {
+        		var w = document.body.clientWidth;
+        		w = w - 128 + "px";
+        		document.getElementsByTagName('input')[0].style.width=w;
+        	}
+
+			function updateYzmImg(){
+				$.get(updateYzm,function(data){
+					$("#yzm").val("");
+					$("#img_yzm").attr("src",data.yzm);
+					$.get(deleteYzm);
+				})
+			}
+
+			function showYzm(yzm){
+				var str = '<div class="dialog_content_input"><input id="yzm" type="number" placeholder="请输入验证码"></div><div class="dialog_content_img">' +
+						'<img id="img_yzm" src="'+yzm+'" alt="点我刷新" onclick="updateYzmImg()"></div>';
+					$.confirm(str,"安全验证",function(){
+						var yzm=$("#yzm").val();
+						if(yzm == "" || yzm.length != 4) {
+							//验证码为空或者验证码长度不为4，不允许通过
+							$("#yzm").val("");
+							alert("请输入符合右图的验证码");
+						}
+						else {
+							ajaxCheck(yzm);
+						}
+					},function(){
+						console.log("取消");
+					})
+				// if(count<1){
+				// 	count++;
+					
+				// }
+				// else{
+				// 	$.alert("请检查您的信息是否正确后再试!","温馨提示",function(){ location.reload(); });
+				// }
+			}
+
+			function ajaxCheck(yzm){
+				$.showLoading("全力加载中...");
+				$.ajax({
+					url: check,
+					type: "post",
+					data:{ studentid: $("#studentid").val() ,password: $("#password").val() ,yzm: yzm ,option: window.localStorage.getItem("option") },
+					dataType: "JSON",
+					success: function(data){
+						$.hideLoading();
+						if(data.status==1){
+//							$.alert("successful:"+data.url);
+							location.href=data.url;
+						}
+						else if(data.status==2){
+							$("#password").val("");
+							$.alert("密码错误，请重新输入！","温馨提示",function(){$("#password").focus();});
+						}
+						else if(data.status==3){
+							$.get(updateYzm,function(data){
+								$("#yzm").val("");
+								showYzm(data.yzm);
+								$.get(deleteYzm);
+							})
+						}
+						else {
+							$.alert( typeof(data.info)=="undefined" ? "网络不稳定,建议使用流量~" : data.info,"温馨提示");
+						}
+					},
+					error: function(){
+						$.hideLoading();
+						$.alert("网络不稳定，请稍后再试！","温馨提示");
+					}
+				})
+			}
+
+			function show() {
+				var input = document.getElementsByTagName('input')[0];
+				var img = document.getElementsByTagName('img')[1];
+				if (input.getAttribute("type") === "password") {
+					input.setAttribute("type","number")
+					img.setAttribute("src",pub+"/images/checked.svg")
+				}else{
+					input.setAttribute("type","password")
+					img.setAttribute("src",pub+"/images/uncheck.svg")
+				}
+			}
+        </script>
+        <!--<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>-->
+    </body>
+</html>

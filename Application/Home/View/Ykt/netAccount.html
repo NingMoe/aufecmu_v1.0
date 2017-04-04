@@ -1,0 +1,192 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>网络开户</title>
+        <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/weui.css">
+        <link rel="stylesheet" href="__PUBLIC__/css/jquery-weui.css">
+        <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/example.css">
+        <script src="__PUBLIC__/js/jquery-2.1.4.js"></script>
+        <script src="__PUBLIC__/js/jquery-weui.js"></script>
+        <script src="__PUBLIC__/js/adapter.js"></script>
+        <script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+        <style type="text/css">
+			.weui_cell_bd p:first-child{
+			  display: inline;
+			  position: absolute;
+			  left: 46px;
+			}
+			.weui_cell_bd p:nth-child(2){
+			  float: right;
+			  color: #888;
+			  }
+			.weui_btn_area {
+			  margin: 3em 15px 0.3em;
+			}
+        </style>
+    </head>
+    <body style="overflow: hidden;">
+            <div class="weui_cells">
+                <div class="weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p style="position:relative;left: 0px;display:block;">网络计费账户</p>
+                    </div>
+                    <div class="weui_cell_ft" id="studentid"></div>
+                </div>
+            </div>
+    <div class="weui_cells_title">缴费方式(仅可使用校园卡开户)</div>
+    <div class="weui_cells weui_cells_radio">
+        <label class="weui_cell weui_check_label" for="x11">
+            <div class="weui_cell_ft">
+                <input type="radio" class="weui_check" name="radio1" id="x11" checked="checked">
+                <span class="weui_icon_checked"></span>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary radio">
+                <p>校园卡</p>
+                <p id="campus">--元</p>
+            </div>
+        </label>
+        <!--<label class="weui_cell weui_check_label" for="x12">-->
+            <!--<div class="weui_cell_ft">-->
+                <!--<input type="radio" name="radio1" class="weui_check" id="x12">-->
+                <!--<span class="weui_icon_checked"></span>-->
+            <!--</div>-->
+            <!--<div class="weui_cell_bd weui_cell_primary radio">-->
+                <!--<p>银行卡</p>-->
+                <!--<p id="bank">&#45;&#45;元</p>-->
+            <!--</div>-->
+        <!--</label>-->
+    </div>
+    <div class="weui_cells_title">计费方式</div>
+    <div class="weui_cells weui_cells_radio">
+        <label class="weui_cell weui_check_label" for="x13" onclick="account5();">
+            <div class="weui_cell_ft">
+                <input type="radio" class="weui_check" name="radio2" id="x13" checked="checked">
+                <span class="weui_icon_checked"></span>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary radio">
+                <p>包月100小时</p>
+                <p>5元</p>
+            </div>
+        </label>
+        <label class="weui_cell weui_check_label" for="x14" onclick="account10();">
+            <div class="weui_cell_ft">
+                <input type="radio" name="radio2" class="weui_check" id="x14">
+                <span class="weui_icon_checked"></span>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary radio">
+                <p>包月200小时</p>
+                <p>10元</p>
+            </div>
+        </label>
+    </div>
+    <div class="weui_cells_title">网络密码设置</div>
+        <div class="weui_cells weui_cells_form">
+        <div class="weui_cell weui_cells_form">
+            <div class="weui_cell_hd"><label class="weui_label" style="width: 4em">网络密码</label></div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="password" name="password" id="password" placeholder="密码可为字母与数字的组合" maxlength="6" onkeyup="value=value.replace(/[\W]/g,'')" >
+                <div class="alert" id="alert1">
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="groupName" id="groupName" value="7" data-money="5">
+    <input id="bankMoney" type="hidden" value="0" data-status="5">
+    <input id="campusMoney" type="hidden" value="0">
+    <div class="weui_btn_area">
+        <a class="weui_btn weui_btn_disabled weui_btn_primary" href="javascript:" id="account" data-account="0">系统初始化中...</a>
+    </div>
+
+    </body>
+    <script>
+    var share="{$share}";
+    var getMoneyBalance="{$getMoneyBalance}";
+	function account5(){
+    	$("#groupName").val("7");
+        $("#groupName").data("money","5");
+    }
+    
+	function account10(){
+		$("#groupName").val("8");
+        $("#groupName").data("money","10");
+    }
+
+    function init(){
+        var url=yktAPI+"getCampusMoney",fn_success=function (data) {
+            if(data.status=="1") {
+                $("#account").data("account","1");
+                $("#account").removeClass("weui_btn_disabled");
+                $("#account").html("网络开户");
+                window.localStorage.setItem('campusMoney',data.campus);
+                $.post(yktAPI+"moneyTogether",{campusMoney : data.campus});
+                window.localStorage.setItem('storeTime',Date.parse(new Date()) / 1000);
+                $("#campus").html(data.campus+"元");
+            }
+            else if(data.status=="5") {
+                //cookie超时，重新登录
+                Public.isWeiXin() ? Public.wxLogin("save") : alert("请使用微信端登录哦！");
+            }
+            else {
+                $("#account").data("account","-1");
+                $("#campus").html((data.info == undefined || data.info=="" || data.info==null) ? "内部错误" : data.info);
+            }
+        },fn_error=function () {
+            alert("内部错误，请联系管理员！");
+        };
+        Public.loadAjaxData(url,{},fn_success,fn_error);
+        var studentid=window.localStorage.getItem("studentid");
+        if(studentid == "" || studentid==undefined) {
+            $.get(yktAPI+"personInfo",function (data) {
+                console.log(data);
+                if(data.status==1) {
+                    window.localStorage.setItem("studentid",data.studentid);
+                    window.localStorage.setItem("name",data.name);
+                    $("#studentid").html(data.studentid);
+                }
+                else {
+                    $.alert(data.info,"温馨提示");
+                }
+            })
+        }
+        else{
+            $("#studentid").html(studentid);
+        }
+    }
+    
+	
+	$(function(){
+        init();
+		$("#account").click(function(){
+            if($("#account").data("account")!=1){
+                console.log($("#account").data("account"));
+                $.alert($("#account").html());
+                return ;
+            }
+            var uri=yktAPI+"ajaxFunction&fnOption=netAccount",data={groupName :$("#groupName").val(),password: $("#password").val() ,money: $("#groupName").data("money")},fn_success=function (data) {
+                $.hideLoading();
+                if(data.status==1){
+                    location.href=data.url;
+                }
+                else{
+                    $.alert("开通失败");
+                }
+            },fn_error=function () {
+                $.hideLoading();
+                $.alert("请尝试联系管理员或刷新页面重试！","温馨提示");
+            };
+			if($("#password").val()!=""){
+                $.showLoading("全力加载中...");
+//                Public.loadAjaxData(uri,data,fn_success,fn_error,"post");
+			}
+			else{
+                $.alert("请输入密码");
+			}
+		})
+
+	})
+    </script>
+    <!--<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>-->
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>掌上一卡通</title>
+        <link rel="stylesheet" href="__PUBLIC__/css/weui.min.css">
+        <link rel="stylesheet" href="__PUBLIC__/css/jquery-weui.css">
+        <link rel="stylesheet" href="__PUBLIC__/css/demo.css">
+        <script src="__PUBLIC__/js/jquery-2.1.4.js"></script>
+        <script src="__PUBLIC__/js/jquery-weui.js"></script>
+        <script src="__PUBLIC__/js/jweixin-1.0.0.js"></script>
+
+        <style type="text/css">
+            .weui_label {
+                display: block;
+                width: 4em;
+            }
+            .spacing{
+                margin-top: 2em;
+            }
+        </style>
+    </head>
+    <body style="overflow: hidden;">
+        <header class="demos-header">
+            <h1 class="demos-title">请先登录</h1>
+        </header>
+        <div class="weui_cells weui_cells_form" style="margin-top: 45px;margin-bottom: 40px;">
+            <div class="weui_cell">
+                <div class="weui_cell_hd"><label class="weui_label">学号</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" type="number" id="Student_Id" name="studentId" pattern="[0-9]*" placeholder="请输入学号" onkeyup="value=this.value.replace(/\D+/g,'')">
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd"><label class="weui_label">密码</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" type="password" id="Password" name="password" placeholder="请输入6位密码" maxlength="6" pattern="[0-9]*" onkeyup="value=this.value.replace(/\D+/g,'')">
+                </div>
+            </div>
+            <div class="weui_cell weui_vcode"  style="display: none">
+                <div class="weui_cell_hd"><label class="weui_label">验证码</label></div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" id="yzm" name="yzm" type="number" value="" placeholder="请输入验证码"/>
+                </div>
+                <div class="weui_cell_ft weui_vimg_wrp">
+                    <img src="./Public/images/init.jpg" style="width: 115px;" id="yzmUrl" onclick="_updateYzm();" alt="点我刷新"/>
+                </div>
+            </div>
+        </div>
+        <div class="weui_btn_area">
+            <a class="weui_btn weui_btn_disabled weui_btn_primary" href="javascript:" id="submit">请先输入学号</a>
+        </div>
+    </body>
+    <script>
+        var updateYzm="{$updateYzm}";
+        var getYzm="{$getYzm}";
+        var deleteYzm="{$deleteYzm}";
+        var judge="{$judge}";
+        var pattern=1;
+        var share="{$share}";
+        init();
+        $(function(){
+            $("#submit").click(function(){
+                if(! basicJudge()){
+                    return false;
+                }
+                $.showLoading("正在加载中...");
+                $.ajax({
+                    url: judge,
+                    data: { studentid: $("#Student_Id").val(), password: $("#Password").val() ,yzm : $("#yzm").val() ,pattern: pattern,option: window.localStorage.getItem("option")},
+                    type:"post",
+                    dataType:"json",
+                    success: function(data) {
+                        $.hideLoading();
+                        if(data.status==1){
+                            location.href=data.url;
+//                            $.alert("success");
+                        }
+                        else if(data.status==2){
+                            $("#Password").val("");
+                            $(".weui_vcode").css("display","");//即将显示验证码，自动将验证码显示出来。
+                            _updateYzm();
+                            $.alert(data.info,"温馨提示",function(){
+                                $("#Password").focus();
+                            });
+                        }
+                        else {
+                            $(".weui_vcode").css("display","");//即将显示验证码，自动将验证码显示出来。
+                            _updateYzm();
+                            $.alert(data.info+data.status,"温馨提示");
+                        }
+                    },
+                    error: function(){
+                        $.hideLoading();
+                        $.alert("网络不稳定，建议切换至流量使用","温馨提示");
+                    }
+                })
+            })
+        })
+
+        $("#Student_Id").change(function(){
+            var str=$("#Student_Id").val();
+            if(str.length>=8){
+                $("#submit").html("安全登录");
+                $("#submit").attr("class","weui_btn weui_btn_primary");
+            }
+        })
+
+        function init(){
+            $.ajax({
+                url: getYzm,
+                type:"get",
+                dataType:"json",
+                success: function(data){
+                    if(data.pattern==1){
+                        $(".weui_vcode").css("display","none");
+                        $("#yzm").attr("value",data.yzm);
+                    }
+                    else if(data.pattern==2){
+                        pattern=2;//将当前pattern设置为2
+                        $("#yzmUrl").attr("src",data.yzm);
+                        $("#yzm").val("");
+                        $(".weui_vcode").css("display","");
+                        $.post(deleteYzm);
+                    }
+                    $("#submit").html("安全登录");
+                    $("#submit").attr("class","weui_btn weui_btn_primary");
+                }
+            })
+        }
+
+        function _updateYzm(){
+            $.get(updateYzm,function(data){
+                $("#yzmUrl").attr("src",data.yzm);
+                $("#yzm").val("");
+            });
+        }
+
+        function basicJudge(){
+            if($("#Student_Id").val()==""){
+                $("#studentid").focus();
+                $.toast("请输入学号","text");
+                return false;
+            }
+            if($("#Password").val()==""){
+                $("#password").focus();
+                $.toast("请输入密码","text");
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <!--<script src="__PUBLIC__/js/share.js?version=4.0.3"></script>-->
+</html>

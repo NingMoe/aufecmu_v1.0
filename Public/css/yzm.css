@@ -1,0 +1,25 @@
+.dialog_content_input{
+    display: inline;
+    height: 50px;
+}
+
+.dialog_content_input input{
+    width: 120px;
+    height: 30px;
+    padding-left: 5px;
+    border: none;
+    box-shadow: none;
+    font-size: 16px;
+}
+
+.dialog_content_img{
+    display: inline;
+}
+
+.dialog_content_img img{
+    position: relative;
+    height: 30px;
+    top: 11px;
+    border-bottom:1px solid #D9D9D9;
+    right: 5px;
+}

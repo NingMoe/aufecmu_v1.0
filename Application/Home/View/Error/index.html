@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>错误提示界面</title>
+    <link type="text/css" rel="stylesheet" href="__PUBLIC__/css/weui.css">
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"> </script>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?02e6370a8bad8125a3744d0b572a1b69";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="msg">
+            <div class="weui_msg">
+                <div class="weui_icon_area"><i class="weui_icon_msg weui_icon_warn"></i></div>
+                <div class="weui_text_area">
+                    <h2 class="weui_msg_title">{$title}</h2>
+                    <p class="weui_msg_desc">{$des}</p>
+                </div>
+                <div class="weui_opr_area">
+                    <p class="weui_btn_area">
+                        <a href="javascript: ('{$redirectUri}' == '') ? wx.closeWindow() : window.href='{$redirectUri}'; " class="weui_btn weui_btn_warn">关闭页面</a>
+                    </p>
+                </div>
+                <div class="weui_extra_area">
+                    <a href="">&copy;SA团队</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
